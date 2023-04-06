@@ -38,14 +38,18 @@ include_directories(${PROJECT_BINARY_DIR}/src/lib)
 add_library(geogram ${SOURCES} $<TARGET_OBJECTS:geogram_third_party>)
 
 target_include_directories(geogram PRIVATE
-    ${PROJECT_SOURCE_DIR}/src/lib/geogram/third_party/amgcl 
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram/third_party/amgcl>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/geogram/third_party/amgcl>
 )
 
 # Jeremie/Maxence: avoids the need to redeclare geogram include
 # path for targets that depend on geogram.
 # See: https://cmake.org/cmake/help/v3.3/command/target_include_directories.html
 # https://stackoverflow.com/questions/26243169/cmake-target-include-directories-meaning-of-scope
-target_include_directories(geogram PUBLIC ${PROJECT_SOURCE_DIR}/src/lib)
+target_include_directories(geogram PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 if(ANDROID)
   target_include_directories(geogram PRIVATE
